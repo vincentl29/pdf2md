@@ -163,6 +163,24 @@ Flux : `__main__` → `Converter.convert` → `convert_document()` (`pipeline.py
 
 ---
 
+## Dépannage
+
+### Avertissement « Failed to hardlink files » au lancement
+
+Quand le projet et le cache de `uv` se trouvent sur des disques différents (typiquement le projet sur un disque secondaire et le cache sur le disque système), `uv` ne peut pas créer de liens physiques de l'un vers l'autre et affiche :
+
+> warning: Failed to hardlink files; falling back to full copy.
+
+C'est **sans conséquence** : `uv` recopie simplement les fichiers, l'installation comme le lancement fonctionnent normalement. `launch.bat` neutralise déjà ce message ; pour le supprimer aussi en ligne de commande, définissez la variable une fois pour toutes :
+
+```powershell
+setx UV_LINK_MODE copy
+```
+
+puis rouvrez le terminal. Les utilisateurs dont le projet et le cache sont sur le même disque ne verront jamais cet avertissement et n'ont rien à faire.
+
+---
+
 ## Développement
 
 ```powershell
