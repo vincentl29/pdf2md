@@ -1,0 +1,6 @@
+# Fichiers présents sur GitLab (trixie) mais exclus du dépôt public GitHub.
+# Ce fichier est lu par scripts/publish.ps1.
+CLAUDE.md
+AGENTS.md
+PDF2MD.iml
+scripts/

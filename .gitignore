@@ -1,0 +1,12 @@
+/uv.lock
+/fichiers-tests/
+__pycache__/
+*.pyc
+*.pyo
+ruvector.db
+/_tmp_*/
+/.idea/
+/.github/
+/.claude/
+/pdf2md.egg-info/
+/.venv/

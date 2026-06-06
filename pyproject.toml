@@ -1,0 +1,64 @@
+[project]
+name = "pdf2md"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "docling>=2.97.0",
+    "numpy>=2.4.6",
+    "pdfplumber>=0.11.9",
+    "pillow>=12.2.0",
+    "pymupdf>=1.27.2.3",
+    "pytesseract>=0.3.13",
+    # 5.x wheels don't ship the native pdfium binary on this Windows/uv setup;
+    # 4.30.0 is a self-contained wheel that bundles pdfium.dll.
+    "pypdfium2==4.30.0",
+    # torch/torchvision pulled from the CUDA wheel index (see [tool.uv.sources])
+    # so docling runs its models on the GPU. Without this, PyPI ships a CPU-only
+    # build on Windows and the GTX 1660 sits idle.
+    "torch>=2.6.0",
+    "torchvision>=0.21.0",
+    "argostranslate>=1.11.0",
+    "langdetect>=1.0.9",
+]
+
+[tool.uv]
+package = true
+
+# CUDA wheels for torch/torchvision (NVIDIA GPU). cu128 = CUDA 12.8, fine for the
+# GTX 1660 (Turing, sm_75) with a recent driver. On a machine without an NVIDIA
+# GPU, drop this index + sources and `uv sync` falls back to the CPU build.
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu128" }]
+torchvision = [{ index = "pytorch-cu128" }]
+
+[project.scripts]
+pdf2md = "pdf2md.__main__:main"
+pdf2md-gui = "pdf2md.gui:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "ruff>=0.15.15",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
