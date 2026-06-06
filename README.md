@@ -1,5 +1,11 @@
 # pdf2md
 
+*Convert PDFs and image scans into structured, LLM-ready Markdown — tables, images, deep-learning OCR (docling), optional offline translation.*
+
+![Python](https://img.shields.io/badge/python-3.12%2B-blue)
+![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE.md)
+
 Convertit un PDF (ou un scan image) en fichiers Markdown structurés, prêts à être envoyés à un LLM.
 
 - **Routage page par page** : les pages avec un vrai calque texte sont extraites localement et instantanément (PyMuPDF + pdfplumber, sans OCR ni chargement de modèle) ; les pages scannées passent par **docling** (IBM, deep-learning : analyse de mise en page + TableFormer + OCR RapidOCR).
