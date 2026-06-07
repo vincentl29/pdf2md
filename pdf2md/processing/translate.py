@@ -22,8 +22,16 @@ instead of crashing the conversion.
 
 from __future__ import annotations
 
+import logging
 import re
 from collections.abc import Callable
+
+# argos-translate pulls in stanza for some language pairs; on first pipeline
+# load it logs informational notices ("Language en package default expects
+# mwt, which has been added") at WARNING severity via logging.getLogger("stanza").
+# They're harmless pipeline-setup details, but "WARNING" reads as alarming to
+# non-technical users watching the conversion log — raise the bar to errors only.
+logging.getLogger("stanza").setLevel(logging.ERROR)
 
 # langdetect returns BCP-47-ish codes for some languages; argos wants the bare
 # ISO-639-1 code.
