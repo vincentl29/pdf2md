@@ -49,7 +49,7 @@ uv run python -m pdf2md.gui             # interface graphique
 
 ## Tests et qualité
 
-Avant toute PR, ces trois commandes doivent passer :
+Avant toutes PR, ces trois commandes doivent passer :
 
 ```powershell
 uv run pytest          # tests
@@ -95,7 +95,7 @@ refactor: …      test: …      chore: …
 ## Repères d'architecture
 
 Le pipeline actif est routé **page par page** : chemin natif rapide
-(PyMuPDF + pdfplumber) vs **docling** (deep-learning) pour les pages scannées.
+(PyMuPDF + pdfplumber) vs **docling** (deep learning) pour les pages scannées.
 La traduction est une couche optionnelle hors-ligne (argos-translate).
 
 - Vue utilisateur et structure de sortie : **`README.md`**.

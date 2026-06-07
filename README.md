@@ -1,6 +1,8 @@
 # pdf2md
 
-*Convert PDFs and image scans into structured, LLM-ready Markdown — tables, images, deep-learning OCR (docling), optional offline translation.*
+**Français** · [English](README.en.md)
+
+*Convertisseur PDF → Markdown **100 % local et hors-ligne** : routage page par page, OCR deep-learning (docling), tableaux, images, et traduction intégrée — sans clé API, sans envoi de données dans le cloud.*
 
 ![Python](https://img.shields.io/badge/python-3.12%2B-blue)
 ![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)
@@ -15,6 +17,27 @@ Convertit un PDF (ou un scan image) en fichiers Markdown structurés, prêts à 
 - **Traduction automatique optionnelle** (hors-ligne) vers le français par défaut, ou toute autre langue.
 - **Accélération GPU** (CUDA) automatique si une carte NVIDIA est présente, sinon CPU.
 - Barre de progression temps réel (extraction puis écriture) dans l'interface graphique.
+
+---
+
+## Pourquoi pdf2md ?
+
+La plupart des convertisseurs PDF → Markdown tombent dans l'une de deux familles : ceux qui s'appuient sur un **LLM de vision distant** (qualité élevée, mais clé API obligatoire, coût par page et données envoyées dans le cloud), et ceux qui restent **locaux mais à OCR basique**. pdf2md vise l'angle laissé vide entre les deux : **rester entièrement local tout en gardant un OCR de qualité**.
+
+Concrètement, il est le seul à combiner ces quatre traits :
+
+- **Routage page par page** — un modèle lourd n'est chargé que sur les pages qui en ont besoin ; un PDF 100 % natif ne charge jamais docling (quelques secondes, pas quelques minutes).
+- **Tout en local** — aucune clé API, aucune donnée ne quitte la machine, avec accélération GPU NVIDIA automatique (sinon CPU).
+- **Traduction hors-ligne intégrée** au pipeline (argos-translate), structure Markdown préservée.
+- **Interface graphique** en plus de la CLI.
+
+| | Approche | Local | Sans clé API | Trad. offline | GUI |
+|---|---|:---:|:---:|:---:|:---:|
+| Outils « LLM vision » (ex. MarkPDFdown, zyocum) | vision distante | ❌ | ❌ | ❌ | ❌ |
+| Outils « locaux légers » (ex. AlcheMark, navigateur) | OCR/heuristique simple | ✅ | ✅ | ❌ | ~ |
+| **pdf2md** | **routage natif / docling** | ✅ | ✅ | ✅ | ✅ |
+
+> pdf2md n'est pas un « wrapper » de docling : docling n'est qu'un des deux moteurs, appelé **uniquement** sur les pages scannées ou au calque texte cassé. La valeur ajoutée est l'**orchestration** — routage, détection du calque cassé, normalisation Markdown unifiée, sidecars `.tables.json`, traduction et GUI.
 
 ---
 
