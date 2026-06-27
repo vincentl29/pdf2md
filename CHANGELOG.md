@@ -7,6 +7,11 @@ et le projet vise le [versionnage sémantique](https://semver.org/lang/fr/).
 
 ## [Unreleased]
 
+## [1.0.0] — 2026-06-27
+
+Première version officielle publique — pipeline stable, interface graphique,
+traduction hors-ligne, accélération GPU.
+
 ### Fixed
 - **`launch.bat`** : reconstruction automatique du `.venv` incomplet ou corrompu.
   `uv sync` est exécuté silencieusement à chaque lancement ; en cas d'échec,
