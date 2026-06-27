@@ -40,9 +40,9 @@ uv sync
 ## Lancer le projet
 
 ```powershell
-uv run python -m pdf2md                 # CLI interactif
-uv run python -m pdf2md fichier.pdf -o C:\sortie
-uv run python -m pdf2md.gui             # interface graphique
+uv run pdf2md                          # CLI interactif
+uv run pdf2md fichier.pdf -o C:\sortie
+uv run pdf2md-gui                      # interface graphique
 ```
 
 ---

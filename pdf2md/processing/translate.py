@@ -1,4 +1,4 @@
-"""Optional automatic translation of the extracted Markdown.
+"""Automatic translation of the extracted Markdown.
 
 The conversion pipeline produces Markdown in the source document's language.
 When a target language is requested (default French, selectable in the UI/CLI),
@@ -15,9 +15,9 @@ VRAM (NLLB/M2M100 would). Swapping in another backend (NLLB, DeepL, …) is a
 single function — ``_engine_translate`` — with no change to the pipeline or UI.
 
 Source language is auto-detected per page with ``langdetect``; a page already
-in the target language is left untouched. Both optional dependencies degrade
-gracefully: if either is missing, translation no-ops with a clear message
-instead of crashing the conversion.
+in the target language is left untouched. Both ``argostranslate`` and
+``langdetect`` are required dependencies — they are declared in
+``pyproject.toml`` and installed by ``uv sync``.
 """
 
 from __future__ import annotations
@@ -41,17 +41,6 @@ _LANGDETECT_FIX = {"zh-cn": "zh", "zh-tw": "zh"}
 _TABLE_SEP_RE = re.compile(r"^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?\s*$")
 # Leading Markdown markers we keep verbatim, translating only what follows.
 _LEADING_RE = re.compile(r"^(\s*(?:#{1,6}\s+|[-*+]\s+|\d+\.\s+|>\s+)?)(.*)$")
-
-
-def translation_available() -> bool:
-    """True when both optional deps (argostranslate + langdetect) import."""
-    try:
-        import argostranslate.translate  # noqa: F401
-        import langdetect  # noqa: F401
-
-        return True
-    except Exception:
-        return False
 
 
 def detect_language(text: str) -> str | None:
@@ -268,13 +257,6 @@ def translate_result(
     built (offline + uncached), are left untouched. Returns the number of
     pages actually translated.
     """
-    if not translation_available():
-        print(
-            "  ⚠ Traduction ignorée : dépendances absentes "
-            "(`uv add argostranslate langdetect`)."
-        )
-        return 0
-
     tr = Translator(target_lang)
     total = len(result.pages)
     translated = 0

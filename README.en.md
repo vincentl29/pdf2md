@@ -14,7 +14,7 @@ Converts a PDF (or an image scan) into structured Markdown files, ready to feed 
 - One `.md` file per page plus an `_index.md` summary, inside a dedicated subfolder `{output}/{filename}/`.
 - **Tables** rendered as Markdown *and* exported as a `{name}_pNN.tables.json` sidecar (for machine consumption).
 - **Images** extracted into `md_images/` with a `![image](…)` link replacing the placeholder.
-- **Optional automatic translation** (offline) to French by default, or any other language.
+- **Automatic translation** (offline) to French by default, or any other language.
 - Automatic **GPU acceleration** (CUDA) when an NVIDIA card is present, otherwise CPU.
 - Real-time progress bar (extraction then writing) in the GUI.
 
@@ -80,27 +80,27 @@ uv sync
 
 ### Graphical interface
 
-Double-click `launch.bat` (or `uv run python -m pdf2md.gui`).
+Double-click `launch.bat` (or `uv run pdf2md-gui`).
 
 1. **Source PDF file** — *Browse…* (PDF or image: TIFF, PNG, JPG, BMP, GIF, WEBP…).
 2. **Output folder** — the file's parent folder is suggested by default.
 3. *(optional)* Tick **Translate output to:** and choose the target language.
-4. Click **Convert** — the bar shows progress (extraction then writing).
+4. Click **Convert** — the bar shows progress (extraction then writing). At the end, the output folder opens automatically in Explorer.
 
 ### Command line
 
 ```powershell
 # Interactive mode
-uv run python -m pdf2md
+uv run pdf2md
 
 # With arguments
-uv run python -m pdf2md report.pdf
-uv run python -m pdf2md report.pdf -o C:\output
+uv run pdf2md report.pdf
+uv run pdf2md report.pdf -o C:\output
 
 # With translation (disabled by default)
-uv run python -m pdf2md report.pdf -l fr               # auto-detect → French
-uv run python -m pdf2md report.pdf -l en               # → English
-uv run python -m pdf2md report.pdf -l en --from-lang de # force source language (German)
+uv run pdf2md report.pdf -l fr               # auto-detect → French
+uv run pdf2md report.pdf -l en               # → English
+uv run pdf2md report.pdf -l en --from-lang de # force source language (German)
 ```
 
 | Option | Role |
@@ -159,7 +159,7 @@ Classification is done **page by page** (a single PDF can mix both):
 
 ---
 
-## Translation (optional)
+## Translation
 
 Disabled by default. When a target language is requested (GUI checkbox or `-l`), each page's Markdown **and** its table cells are rewritten *after* extraction and *before* writing — so `_index.md` and the `.tables.json` files come out translated too.
 
@@ -178,7 +178,7 @@ pdf2md/
 │   ├── pipeline.py        — per-page router (native vs docling)
 │   ├── native_extract.py  — fast path (PyMuPDF + pdfplumber), text_is_reliable gate
 │   ├── docling_engine.py  — docling backend (layout + TableFormer + RapidOCR), GPU, 1 page at a time
-│   └── translate.py       — optional translation (argos-translate, markdown-aware)
+│   └── translate.py       — translation (argos-translate, markdown-aware)
 ├── output/
 │   └── docling_writer.py  — {stem}_pNN.md + .tables.json + _index.md + md_images/
 ├── converter.py           — orchestration, progress callbacks, translation hook
@@ -186,7 +186,7 @@ pdf2md/
 └── __main__.py            — CLI entry point
 ```
 
-Flow: `__main__` → `Converter.convert` → `convert_document()` (`pipeline.py`) → *(optional translation)* → `write_docling()`.
+Flow: `__main__` → `Converter.convert` → `convert_document()` (`pipeline.py`) → *(translation)* → `write_docling()`.
 
 > The legacy modules (`input/loader.py`, `processing/ocr.py`, `extractor.py`, `structure.py`, `output/serializer.py`, `writer.py`) are kept but **inactive**: they made up the Tesseract/numpy pipeline that docling replaced.
 

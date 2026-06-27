@@ -14,7 +14,7 @@ Convertit un PDF (ou un scan image) en fichiers Markdown structurés, prêts à 
 - Un fichier `.md` par page + un `_index.md` récapitulatif, dans un sous-dossier dédié `{sortie}/{nom_du_fichier}/`.
 - **Tableaux** rendus en Markdown *et* exportés en sidecar `{nom}_pNN.tables.json` (pour consommation machine).
 - **Images** extraites dans `md_images/` avec un lien `![image](…)` à la place du marqueur.
-- **Traduction automatique optionnelle** (hors-ligne) vers le français par défaut, ou toute autre langue.
+- **Traduction automatique** (hors-ligne) vers le français par défaut, ou toute autre langue.
 - **Accélération GPU** (CUDA) automatique si une carte NVIDIA est présente, sinon CPU.
 - Barre de progression temps réel (extraction puis écriture) dans l'interface graphique.
 
@@ -80,27 +80,27 @@ uv sync
 
 ### Interface graphique
 
-Double-cliquer sur `launch.bat` (ou `uv run python -m pdf2md.gui`).
+Double-cliquer sur `launch.bat` (ou `uv run pdf2md-gui`).
 
 1. **Fichier PDF source** — *Parcourir…* (PDF ou image : TIFF, PNG, JPG, BMP, GIF, WEBP…).
 2. **Dossier de sortie** — le dossier parent du fichier est proposé par défaut.
 3. *(optionnel)* Cocher **Traduire la sortie vers :** et choisir la langue cible.
-4. Cliquer sur **Convertir** — la barre indique l'avancement (extraction puis écriture).
+4. Cliquer sur **Convertir** — la barre indique l'avancement (extraction puis écriture). À la fin, le dossier de sortie s'ouvre automatiquement dans l'Explorateur.
 
 ### Ligne de commande
 
 ```powershell
 # Mode interactif
-uv run python -m pdf2md
+uv run pdf2md
 
 # Avec arguments
-uv run python -m pdf2md rapport.pdf
-uv run python -m pdf2md rapport.pdf -o C:\sortie
+uv run pdf2md rapport.pdf
+uv run pdf2md rapport.pdf -o C:\sortie
 
 # Avec traduction (désactivée par défaut)
-uv run python -m pdf2md rapport.pdf -l fr               # détection auto → français
-uv run python -m pdf2md rapport.pdf -l en               # → anglais
-uv run python -m pdf2md rapport.pdf -l fr --from-lang de # forcer la langue source (allemand)
+uv run pdf2md rapport.pdf -l fr               # détection auto → français
+uv run pdf2md rapport.pdf -l en               # → anglais
+uv run pdf2md rapport.pdf -l fr --from-lang de # forcer la langue source (allemand)
 ```
 
 | Option | Rôle |
@@ -159,7 +159,7 @@ La classification est faite **page par page** (un même PDF peut mélanger les d
 
 ---
 
-## Traduction (optionnelle)
+## Traduction
 
 Désactivée par défaut. Quand une langue cible est demandée (case GUI ou `-l`), le Markdown de chaque page **et** les cellules des tableaux sont réécrits *après* extraction et *avant* écriture — l'`_index.md` et les `.tables.json` ressortent donc traduits eux aussi.
 
@@ -178,7 +178,7 @@ pdf2md/
 │   ├── pipeline.py        — routeur page-par-page (natif vs docling)
 │   ├── native_extract.py  — chemin rapide (PyMuPDF + pdfplumber), gate text_is_reliable
 │   ├── docling_engine.py  — backend docling (layout + TableFormer + RapidOCR), GPU, 1 page/fois
-│   └── translate.py       — traduction optionnelle (argos-translate, markdown-aware)
+│   └── translate.py       — traduction (argos-translate, markdown-aware)
 ├── output/
 │   └── docling_writer.py  — {stem}_pNN.md + .tables.json + _index.md + md_images/
 ├── converter.py           — orchestration, callbacks de progression, hook traduction
@@ -186,7 +186,7 @@ pdf2md/
 └── __main__.py            — point d'entrée CLI
 ```
 
-Flux : `__main__` → `Converter.convert` → `convert_document()` (`pipeline.py`) → *(traduction optionnelle)* → `write_docling()`.
+Flux : `__main__` → `Converter.convert` → `convert_document()` (`pipeline.py`) → *(traduction)* → `write_docling()`.
 
 > Les anciens modules (`input/loader.py`, `processing/ocr.py`, `extractor.py`, `structure.py`, `output/serializer.py`, `writer.py`) sont conservés mais **inactifs** : ils constituaient le pipeline Tesseract/numpy remplacé par docling.
 

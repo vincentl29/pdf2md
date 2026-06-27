@@ -7,6 +7,11 @@ et le projet vise le [versionnage sémantique](https://semver.org/lang/fr/).
 
 ## [Unreleased]
 
+### Fixed
+- **`launch.bat`** : reconstruction automatique du `.venv` incomplet ou corrompu.
+  `uv sync` est exécuté silencieusement à chaque lancement ; en cas d'échec,
+  `.venv` est supprimé et recréé avant d'ouvrir l'interface graphique.
+
 ## [0.1.0] — 2026-06-05
 
 Première version publiée. Conversion PDF → Markdown avec pipeline hybride

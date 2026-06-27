@@ -14,6 +14,20 @@ if errorlevel 1 (
     exit /b 1
 )
 
+rem Verifier et reparer l'environnement avant le lancement.
+uv sync --quiet 2>nul
+if errorlevel 1 (
+    echo Environnement incomplet detecte - reconstruction en cours...
+    if exist .venv rmdir /s /q .venv
+    uv sync
+    if errorlevel 1 (
+        echo.
+        echo Echec de la reconstruction de l'environnement.
+        pause
+        exit /b 1
+    )
+)
+
 uv run python -m pdf2md.gui
 if errorlevel 1 (
     echo.
